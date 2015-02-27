@@ -36,12 +36,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.util.Log;
 import android.view.View;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * This class defines the native implementation of the AdColony Cordova plugin.
+ * This class defines the native implementation of the Kochava Cordova plugin.
  */
-public class KochavaCordova extends CordovaPlugin implements AdColonyAdListener, AdColonyAdAvailabilityListener, AdColonyV4VCListener {
+public class KochavaCordova extends CordovaPlugin {
 
 	private static final String TAG = "KochavaCordova";
 	/** Cordova Actions */
@@ -75,7 +76,7 @@ public class KochavaCordova extends CordovaPlugin implements AdColonyAdListener,
 
 	private void execInitialize(JSONArray inputs, CallbackContext callbackContext) throws JSONException {
 		String appToken = inputs.getString(0);
-		boolean debug = data.getBoolean(1);
+		boolean debug = inputs.getBoolean(1);
 
 		// Enable debug logging
 		Feature.enableDebug(debug);
@@ -100,7 +101,7 @@ public class KochavaCordova extends CordovaPlugin implements AdColonyAdListener,
 			Log.d(TAG, "Event with "+ viewToken +": "+ eventToken);
 			callbackContext.success();
 		} else {
-			callbackContext.error();
+			callbackContext.error("Kochava has not been initialized");
 		}
 	}
 
