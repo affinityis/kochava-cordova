@@ -1,20 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-id="com.kochava.sdk" version="0.0.1">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.kochava.sdk" version="0.1.0">
+
 	<name>Kochava</name>
 	<description>Kochava plugin for Cordova</description>
 	<license>MIT License</license>
 	<keywords>kochava</keywords>
 	<author>Nerdeez LTD</author>
-	
+
 	<engines>
-        <engine name="cordova" version=">=3.0.0" />
+        <engine name="cordova" version=">=3.5.0" />
     </engines>
-    
+
 	<js-module src="www/kochava.js" name="Kochava">
-        <clobbers target="Kochava" />
+        <clobbers target="window.Kochava" />
     </js-module>
-	
+
+    <!-- android -->
+    <platform name="android">
+        <dependency id="com.google.playservices" url="https://github.com/floatinghotpot/google-play-services" commit="r19" />
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <!-- Kochava Receiver -->
+            <receiver android:name="com.kochava.android.tracker.ReferralCapture" android:exported="true">
+                <intent-filter>
+                    <action android:name="com.android.vending.INSTALL_REFERRER" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+            <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+        </config-file>
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="KochavaCordova">
+                <param name="android-package" value="com.kochava.sdk.cordova.KochavaCordova"/>
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/KochavaCordova.java" target-dir="src/com/kochava/sdk/cordova" />
+        <source-file src="src/android/KochavaSDK.jar" target-dir="libs" />
+    </platform>
+
 	<!-- ios -->
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
@@ -23,19 +55,19 @@ id="com.kochava.sdk" version="0.0.1">
                 <param name="onload" value="true" />
           	</feature>
         </config-file>
-        
+
 		<framework src="src/ios/libTrackAndAd.a" custom="true" />
-		<framework src="SystemConfiguration.framework" />        
+		<framework src="SystemConfiguration.framework" />
         <framework src="UIKit.framework" />
         <framework src="Foundation.framework" />
         <framework src="AdSupport.framework" />
         <framework src="iAd.framework" />
-        
-        
+
+
         <header-file src="src/ios/KochavaCordova.h" />
         <source-file src="src/ios/KochavaCordova.m" />
         <header-file src="src/ios/TrackAndAd.h" />
-        
+
     </platform>
-	
+
 </plugin>
