@@ -50,14 +50,13 @@ public class KochavaCordova extends CordovaPlugin {
 	private static final String ACTION_TRACK_EVENT = "trackEvent";
 
 	private static Feature kTracker;
-	private boolean _hasInitialized;
+	private boolean _hasInitialized = false;
 
 	@Override
 	public boolean execute(String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException
 	{
 		try {
 			if (action.equals(ACTION_INITIALIZE)) {
-				if (_hasInitialized) return false;
 				execInitialize(inputs, callbackContext);
 				return true;
 			} else if (action.equals(ACTION_TRACK_EVENT)) {
@@ -75,6 +74,10 @@ public class KochavaCordova extends CordovaPlugin {
 	/** Private Methods */
 
 	private void execInitialize(JSONArray inputs, CallbackContext callbackContext) throws JSONException {
+		if (_hasInitialized) {
+			callbackContext.success();
+			return;
+		}
 		String appToken = inputs.getString(0);
 		boolean debug = inputs.getBoolean(1);
 
@@ -95,7 +98,7 @@ public class KochavaCordova extends CordovaPlugin {
 
 	private void execTrackEvent(JSONArray inputs, CallbackContext callbackContext) throws JSONException {
 		String viewToken = inputs.getString(0);
-		String eventToken = inputs.getString(0);
+		String eventToken = inputs.getString(1);
 		if (_hasInitialized) {
 			kTracker.event(viewToken, eventToken);
 			Log.d(TAG, "Event with "+ viewToken +": "+ eventToken);
