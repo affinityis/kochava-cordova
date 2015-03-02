@@ -38,7 +38,7 @@
         </config-file>
 
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="KochavaCordova">
+            <feature name="Kochava">
                 <param name="android-package" value="com.kochava.sdk.cordova.KochavaCordova"/>
                 <param name="onload" value="true" />
             </feature>
